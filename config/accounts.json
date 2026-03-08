@@ -1,0 +1,35 @@
+{
+  "accounts": {
+    "Liq_Sniper": {
+      "username": "Liq_Sniper",
+      "focus": "Liquidity + Breaker Blocks",
+      "topics": ["breaker", "liquidity", "order block", "ict", "sweep"]
+    },
+    "ICT_Strategy": {
+      "username": "ICT_Strategy", 
+      "focus": "ICT Concepts + SMC",
+      "topics": ["fvg", "order block", "mss", "sweep", "kill zone"]
+    },
+    "TheInnerCircle": {
+      "username": "TheInnerCircle",
+      "focus": "Michael Hudson - ICT Master",
+      "topics": ["kill zone", "smart money", "ict", "london open"]
+    },
+    "TraderSeymour": {
+      "username": "TraderSeymour",
+      "focus": "SMC + Price Action",
+      "topics": ["smc", "supply demand", "structure", "breaker"]
+    },
+    "Paul_Trades": {
+      "username": "Paul_Trades",
+      "focus": "Price Action + ICT",
+      "topics": ["ict", "sniper entry", "liquidity", "order block"]
+    }
+  },
+  "settings": {
+    "analysis_frequency": "weekly",
+    "notifications": true,
+    "discord_webhook": null,
+    "min_concepts": 2
+  }
+}
