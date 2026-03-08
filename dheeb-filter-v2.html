@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐺 DHEEB | فلتر التداول + MMXM</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg-deep:#0a0c10;--bg-card:#12151c;--bg-card-hover:#181c26;--border:#1e2330;--border-active:#2a3040;--gold:#d4a853;--gold-dim:#8a7035;--green:#22c55e;--red:#ef4444;--amber:#f59e0b;--text:#e8e8e8;--text-dim:#6b7280}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Tajawal,sans-serif;background:var(--bg-deep);color:var(--text);min-height:100vh}
+.container{max-width:520px;margin:0 auto;padding:20px 16px}
+.header{text-align:center;padding:28px 0 24px}
+.wolf-icon{font-size:36px;display:block;margin-bottom:8px}
+.header h1{font-family:Cairo,sans-serif;font-weight:900;font-size:22px;color:var(--gold);margin-bottom:4px}
+.header .sub{font-size:13px;color:var(--text-dim)}
+.phase-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(212,168,83,0.1);border:1px solid rgba(212,168,83,0.2);padding:6px 14px;border-radius:20px;font-size:12px;color:var(--gold);font-weight:600;margin-bottom:16px}
+.progress-wrapper{margin:16px 0 24px}
+.progress-bar{height:3px;background:var(--border);border-radius:4px;overflow:hidden}
+.progress-fill{height:100%;background:var(--gold);width:0%;transition:width 0.3s}
+.progress-label{display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:var(--text-dim)}
+.question-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:24px 20px;margin-bottom:12px;animation:fadeUp 0.4s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.q-number{font-size:11px;color:var(--text-dim);margin-bottom:8px}
+.q-text{font-size:15px;font-weight:500;line-height:1.7;margin-bottom:16px}
+.q-hint{font-size:11px;color:var(--text-dim);margin-bottom:14px;padding:8px 12px;background:rgba(255,255,255,0.02);border-radius:8px}
+.options{display:flex;flex-direction:column;gap:8px}
+.opt-btn{display:flex;align-items:center;gap:10px;width:100%;padding:12px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:13px;cursor:pointer;text-align:right}
+.opt-btn:hover{background:rgba(255,255,255,0.04)}
+.opt-btn.selected{border-color:var(--gold);background:rgba(212,168,83,0.1)}
+.opt-dot{width:8px;height:8px;border-radius:50%;border:1.5px solid var(--text-dim)}
+.opt-btn.selected .opt-dot{background:var(--gold);border-color:var(--gold)}
+.slider-wrapper{padding:8px 0}
+.slider-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--text-dim);margin-bottom:10px}
+.slider-value{text-align:center;font-size:20px;font-weight:700;color:var(--gold);margin-top:6px}
+.blocker-alert{display:none;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);border-radius:14px;padding:24px;text-align:center;margin-bottom:16px}
+.blocker-alert.visible{display:block}
+.ba-title{font-size:18px;font-weight:900;color:var(--red);margin-bottom:6px}
+.chart-section{display:none;padding:20px;background:var(--bg-card);border:1px solid var(--border);border-radius:14px;margin-top:20px}
+.chart-section.visible{display:block}
+.upload-area{border:2px dashed var(--border);border-radius:12px;padding:40px 20px;text-align:center;cursor:pointer}
+.upload-area:hover{border-color:var(--gold)}
+.preview-area{margin-top:16px;display:none}
+.preview-area.visible{display:block}
+.preview-img{max-width:100%;border-radius:8px}
+.analyze-btn{margin-top:16px;width:100%;padding:14px;background:var(--gold);color:#000;border:none;border-radius:12px;font-weight:700;cursor:pointer}
+.loading-spinner{display:none;margin:20px auto;text-align:center}
+.loading-spinner.visible{display:block}
+.spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.analysis-result{margin-top:20px;padding:20px;background:var(--bg-card-hover);border:1px solid var(--gold);border-radius:14px;display:none}
+.analysis-result.visible{display:block}
+.analysis-title{font-weight:700;color:var(--gold);margin-bottom:16px}
+.analysis-content{font-size:13px;line-height:1.8;white-space:pre-wrap}
+.result-panel{display:none;margin-top:20px}
+.result-panel.visible{display:block}
+.verdict-box{text-align:center;padding:32px;border-radius:16px;margin-bottom:16px}
+.verdict-box.go{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3)}
+.verdict-box.caution{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3)}
+.verdict-box.stop{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3)}
+.verdict-icon{font-size:40px;margin-bottom:10px}
+.verdict-text{font-size:22px;font-weight:900;margin-bottom:6px}
+.verdict-box.go .verdict-text{color:var(--green)}
+.verdict-box.caution .verdict-text{color:var(--amber)}
+.verdict-box.stop .verdict-text{color:var(--red)}
+.breakdown{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:12px}
+.score-row{display:flex;justify-content:space-between;padding:8px 0}
+.actions{display:flex;gap:10px;margin-top:20px}
+.btn{flex:1;padding:14px;border-radius:12px;font-weight:700;cursor:pointer;border:none}
+.btn-primary{background:var(--gold);color:#000}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text-dim)}
+.phase-section{display:none}
+.phase-section.active{display:block}
+.concepts-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:12px}
+.concepts-card h3{font-family:Cairo,sans-serif;font-size:14px;color:var(--gold);margin-bottom:12px}
+.concepts-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.concept-item{font-size:11px;padding:8px;background:rgba(255,255,255,0.02);border-radius:8px;text-align:center}
+.concept-item.active{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3)}
+</style>
+</head>
+<body>
+<div class="container" id="app">
+<div class="header">
+<span class="wolf-icon">🐺</span>
+<h1>فلتر ذيب للتداول</h1>
+<div class="sub">فحص نفسي + MMXM + تحليل الشارت</div>
+</div>
+<!-- MMXM Concepts -->
+<div class="concepts-card">
+<h3>📊 مفاهيم MMXM</h3>
+<div class="concepts-grid">
+<div class="concept-item">Weekly = Bias</div>
+<div class="concept-item">Daily = Zones</div>
+<div class="concept-item">4H/1H = Setup</div>
+<div class="concept-item">M5/M1 = Entry</div>
+<div class="concept-item">Order Block</div>
+<div class="concept-item">FVG</div>
+<div class="concept-item">Liquidity</div>
+<div class="concept-item">MSS/CHOCH</div>
+<div class="concept-item">Breaker Block</div>
+<div class="concept-item">Equilibrium</div>
+</div>
+</div>
+<div class="progress-wrapper">
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+<div class="progress-label"><span id="progressPhase">المرحلة النفسية</span><span id="progressCount">0 / 10</span></div>
+</div>
+<div class="blocker-alert" id="blockerAlert">
+<div class="ba-title">🚫 لا تتداول الحين</div>
+<div class="ba-text" id="blockerText"></div>
+</div>
+<div class="phase-section active" id="phase1">
+<div class="phase-tag">🧠 الفحص النفسي</div>
+<div class="question-card" id="card-q1">
+<div class="q-number">السؤال ١</div>
+<div class="q-text">كيف حالتك النفسية الحين؟</div>
+<div class="options">
+<button class="opt-btn" onclick="answer('q1',3,this)"><span class="opt-dot"></span>هادي ومركز — جاهز</button>
+<button class="opt-btn" onclick="answer('q1',2,this)"><span class="opt-dot"></span>عادي</button>
+<button class="opt-btn" onclick="answer('q1',1,this)"><span class="opt-dot"></span>متوتر أو مشتت</button>
+<button class="opt-btn" onclick="answer('q1',0,this,true,'أنت معترف بحالة سيئة. اهتم بنفسك أول.')"><span class="opt-dot"></span>حالة سيئة</button>
+</div>
+</div>
+<div class="question-card" id="card-q2" style="display:none">
+<div class="q-number">السؤال ٢</div>
+<div class="q-text">نمت كويس؟</div>
+<div class="options">
+<button class="opt-btn" onclick="answer('q2',3,this)"><span class="opt-dot"></span>أكثر من 7 ساعات</button>
+<button class="opt-btn" onclick="answer('q2',2,this)"><span class="opt-dot"></span>5-7 ساعات</button>
+<button class="opt-btn" onclick="answer('q2',1,this)"><span class="opt-dot"></span>أقل من 5</button>
+<button class="opt-btn" onclick="answer('q2',0,this,true,'بدون نوم كافي ردة فعلك بطيئة. نم أول.')"><span class="opt-dot"></span>ما نمت</button>
+</div>
+</div>
+<div class="question-card" id="card-q3" style="display:none">
+<div class="q-number">السؤال ٣</div>
+<div class="q-text">هل عندك ضغط خارجي؟</div>
+<div class="options">
+<button class="opt-btn" onclick="answer('q3',3,this)"><span class="opt-dot"></span>لا — كل شي تمام</button>
+<button class="opt-btn" onclick="answer('q3',2,this)"><span class="opt-dot"></span>شوي بس مسيطر</button>
+<button class="opt-btn" onclick="answer('q3',1,this)"><span class="opt-dot"></span>نعم — يأثر علي</button>
+</div>
+</div>
+<div class="question-card" id="card-q4" style="display:none">
+<div class="q-number">السؤال ٤</div>
+<div class="q-text">آخر صفقة — وش تحس؟</div>
+<div class="options">
+<button class="opt-btn" onclick="answer('q4',3,this)"><span class="opt-dot"></span>صفحة جديدة</button>
+<button class="opt-btn" onclick="answer('q4',2,this)"><span class="opt-dot"></span>ربحت بس مو مأثر</button>
+<button class="opt-btn" onclick="answer('q4',1,this)"><span class="opt-dot"></span>خسرت وأبي أعوض</button>
+</div>
+</div>
+<div class="question-card" id="card-q5" style="display:none">
+<div class="q-number">السؤال ٥</div>
+<div class="q-text">هل تحس لازم تتداول اليوم؟</div>
+<div class="options">
+<button class="opt-btn" onclick="answer('q5',3,this)"><span class="opt-dot"></span>لا — بس إذا في سيتب</button>
+<button class="opt-btn" onclick="answer('q5',2,this)"><span class="opt-dot"></span>شوي</button>
+<button class="opt-btn" onclick="answer('q5',1,this)"><span class="opt-dot"></span>نعم — لازم أدخل</button>
+</div>
+</div>
+</div>
+<div class="phase-section" id="phase2">
+<div class="phase-tag">📊 MMXM Analysis</div>
+<div class="question-card" id="card-q6" style="display:none">
+<div class="q-number">السؤال ٦</div>
+<div class="q-text">T — الترند (Weekly/Daily)?</div>
+<div class="options">
+<button class="opt-btn" onclick="answer('q6',3,this)"><span class="opt-dot"></span>ترند واضح ومعاه</button>
+<button class="opt-btn" onclick="answer('q6',2,this)"><span class="opt-dot"></span>ترند موجود</button>
+<button class="opt-btn" onclick="answer('q6',1,this)"><span class="opt-dot"></span>رينج / ما واضح</button>
+</div>
+</div>
+<div class="question-card" id="card-q7" style="display:none">
+<div class="q-number">السؤال ٧</div>
+<div class="q-text">R — Liquidity Sweep?</div>
+<div class="options">
+<button class="opt-btn" onclick="answer('q7',3,this)"><span class="opt-dot"></span>سويب واضح</button>
+<button class="opt-btn" onclick="answer('q7',2,this)"><span class="opt-dot"></span>في سويب</button>
+<button class="opt-btn" onclick="answer('q7',1,this)"><span class="opt-dot"></span>ما صار سويب</button>
+</div>
+</div>
+<div class="question-card" id="card-q8" style="display:none">
+<div class="q-number">السؤال ٨</div>
+<div class="q-text">I — FVG (Imbalance)?</div>
+<div class="options">
+<button class="opt-btn" onclick="answer('q8',3,this)"><span class="opt-dot"></span>FVG واضح</button>
+<button class="opt-btn" onclick="answer('q8',2,this)"><span class="opt-dot"></span>في FVG</button>
+<button class="opt-btn" onclick="answer('q8',1,this)"><span class="opt-dot"></span>ما في FVG</button>
+</div>
+</div>
+<div class="question-card" id="card-q9" style="display:none">
+<div class="q-number">السؤال ٩</div>
+<div class="q-text">L — MMXM Entry (M5/M1)?</div>
+<div class="options">
+<button class="opt-btn" onclick="answer('q9',3,this)"><span class="opt-dot"></span>Setup on H1 + Entry on M5/M1</button>
+<button class="opt-btn" onclick="answer('q9',2,this)"><span class="opt-dot"></span>Setup = Entry (same TF)</button>
+<button class="opt-btn" onclick="answer('q9',1,this)"><span class="opt-dot"></span>ما حددت MMXM</button>
+</div>
+</div>
+<div class="question-card" id="card-q10" style="display:none">
+<div class="q-number">السؤال ١٠</div>
+<div class="q-text">كم RRR؟</div>
+<div class="slider-wrapper">
+<div class="slider-labels"><span>1:1</span><span>1:5</span></div>
+<input type="range" min="1" max="5" step="0.5" value="2" id="rrrSlider" oninput="updateRRR(this.value)" style="width:100%">
+<div class="slider-value" id="rrrValue">1:2.0</div>
+</div>
+<button class="btn btn-primary" onclick="submitRRR()" style="width:100%;margin-top:16px">تأكيد</button>
+</div>
+</div>
+<!-- Chart Upload -->
+<div class="chart-section" id="chartSection">
+<div class="phase-tag">📈 تحليل الشارت بالـ AI</div>
+<div class="upload-area" onclick="document.getElementById('chartInput').click()">
+<div style="font-size:48px;margin-bottom:12px">📊</div>
+<div>ارفع صورة الشارت للتحليل</div>
+<div style="font-size:12px;color:var(--text-dim);margin-top:8px">PNG, JPG</div>
+</div>
+<input type="file" id="chartInput" accept="image/*" style="display:none" onchange="handleChartUpload(event)">
+<div class="preview-area" id="previewArea">
+<img id="previewImg" class="preview-img" alt="Chart">
+</div>
+<button class="analyze-btn" id="analyzeBtn" onclick="analyzeChart()">🔍 تحليل الشارت</button>
+<div class="loading-spinner" id="loadingSpinner">
+<div class="spinner"></div>
+<div>جاري التحليل...</div>
+</div>
+<div class="analysis-result" id="analysisResult">
+<div class="analysis-title">📊 نتيجة التحليل</div>
+<div class="analysis-content" id="analysisContent"></div>
+</div>
+</div>
+<!-- Result -->
+<div class="result-panel" id="resultPanel">
+<div class="verdict-box" id="verdictBox">
+<div class="verdict-icon" id="verdictIcon"></div>
+<div class="verdict-text" id="verdictText"></div>
+<div class="verdict-sub" id="verdictSub"></div>
+</div>
+<div class="breakdown" id="breakdownRows"></div>
+<div class="actions">
+<button class="btn btn-primary" onclick="resetAll()">فحص جديد</button>
+<button class="btn btn-ghost" onclick="showChartUpload()">📈 تحليل شارت</button>
+</div>
+</div>
+</div>
+<script>
+const KIMI_KEY = 'sk-kimi-uRwIBheuzeBYQHXzIgcDkxvclZ32DwMPIgtTWD2RcqfrHg4MqHJPmHE9rwplx5WQ';
+const state = { answers: {}, currentQ: 1 };
+const order = ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10'];
+function answer(q, s, btn, blocker=false, msg='') {
+if(blocker){state.blocked=true;document.getElementById('blockerText').textContent=msg;document.getElementById('blockerAlert').classList.add('visible');return;}
+document.querySelectorAll('#card-'+q+' .opt-btn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');state.answers[q]=s;
+const idx=order.indexOf(q);state.currentQ=idx+2;
+document.getElementById('progressFill').style.width=(Object.keys(state.answers).length/10*100)+'%';
+document.getElementById('progressCount').textContent=Object.keys(state.answers).length+' / 10';
+if(idx<order.length-1){if(order[idx+1]==='q6'){document.getElementById('phase1').classList.remove('active');document.getElementById('phase2').classList.add('active');document.getElementById('progressPhase').textContent='MMXM Analysis';}
+setTimeout(()=>{document.getElementById('card-'+order[idx+1]).style.display='block';},300);}
+}
+function updateRRR(v){document.getElementById('rrrValue').textContent='1:'+parseFloat(v).toFixed(1);}
+function submitRRR(){const v=parseFloat(document.getElementById('rrrSlider').value);state.answers.q10=v>=2?3:v>=1.5?2:1;calc();}
+function calc(){
+let psy=Object.entries(state.answers).filter(([k])=>k<='q5').reduce((s,[,v])=>s+v,0);
+let tri=Object.entries(state.answers).filter(([k])=>k>='q6'&&k<='q9').reduce((s,[,v])=>s+v,0);
+let rrr=state.answers.q10||0;
+let total=psy+tri+rrr, max=12+9+3, pct=Math.round(total/max*100);
+let rrrVal=state.answers.q10||0;
+let ver=pct>=70&&rrrVal>=2?'go':pct>=45?'caution':'stop';
+let txt={go:'✅ ادخل الصفقة',caution:'⚠️ انتبه',stop:'🛑 لا تتداول'}[ver];
+let sub={go:'كل المعايير متوافقة. نفّذ بـ MMXM.',caution:'في نقاط ضعف. قلل الحجم.',stop:'الظروف غير مناسبة.'}[ver];
+document.getElementById('verdictBox').className='verdict-box '+ver;
+document.getElementById('verdictIcon').textContent=ver==='go'?'🟢':ver==='caution'?'🟡':'🔴';
+document.getElementById('verdictText').textContent=txt;
+document.getElementById('verdictSub').textContent=sub;
+document.getElementById('breakdownRows').innerHTML=`
+<div class="score-row"><span>النفسية</span><span>${Math.round(psy/12*100)}%</span></div>
+<div class="score-row"><span>MMXM</span><span>${Math.round(tri/9*100)}%</span></div>
+<div class="score-row"><span>RRR</span><span>1:${rrrVal}</span></div>
+<div class="score-row" style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px;font-weight:700"><span>المجموع</span><span>${pct}%</span></div>`;
+document.getElementById('resultPanel').classList.add('visible');document.getElementById('resultPanel').scrollIntoView({behavior:'smooth'});}
+function showChartUpload(){document.getElementById('resultPanel').style.display='none';document.getElementById('chartSection').classList.add('visible');}
+function handleChartUpload(e){const f=e.target.files[0];if(f){state.chartFile=f;document.getElementById('previewImg').src=URL.createObjectURL(f);document.getElementById('previewArea').classList.add('visible');}}
+async function analyzeChart(){
+if(!state.chartFile){alert('ارفع صورة أولاً');return;}
+document.getElementById('loadingSpinner').classList.add('visible');document.getElementById('analyzeBtn').disabled=true;
+try{
+const base64=await new Promise(r=>{const rd=new FileReader();rd.onload=()=>r(rd.result.split(',')[1]);rd.readAsDataURL(state.chartFile);});
+const prompt=`أنت خبير في التداول بـ ICT/SMC و MMXM. حلل الشارت:\n1. حدد الترند (Weekly/Daily)\n2. حدد OB و FVG\n3. حدد مناطق السيولة\n4. حدد MMXM Setup (4H/1H) و Entry (M5/M1)\n5. حدد نقاط الدخول والخروج\n6. احسب Confluence Score\n7. هل الفرصة strong؟\nأجب بالعربية.`;
+const resp=await fetch('https://api.moonshot.cn/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+KIMI_KEY},body:JSON.stringify({model:'moonshot-v1-8k-vision-preview',messages:[{type:'text',text:prompt},{type:'image_url',image_url:{url:'data:image/jpeg;base64,'+base64}}],temperature:0.7})});
+const data=await resp.json();
+const result=data.choices?.[0]?.message?.content||'حدث خطأ';
+document.getElementById('analysisContent').textContent=result;
+document.getElementById('analysisResult').classList.add('visible');
+}catch(e){document.getElementById('analysisContent').textContent='خطأ: '+e.message;}
+document.getElementById('loadingSpinner').classList.remove('visible');document.getElementById('analyzeBtn').disabled=false;
+}
+function resetAll(){location.reload();}
+</script>
+</body>
+</html>
