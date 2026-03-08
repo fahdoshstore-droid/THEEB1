@@ -2,8 +2,8 @@
   "accounts": {
     "Liq_Sniper": {
       "username": "Liq_Sniper",
-      "focus": "Liquidity + Breaker Blocks",
-      "topics": ["breaker", "liquidity", "order block", "ict", "sweep"]
+      "focus": "Liquidity + Breaker Blocks + Weekly Outlook",
+      "topics": ["breaker", "liquidity", "order block", "ict", "sweep", "weekly", "NQ", "NDX", "nasdaq"]
     },
     "ICT_Strategy": {
       "username": "ICT_Strategy", 
