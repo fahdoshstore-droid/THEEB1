@@ -24,6 +24,11 @@
       "username": "Paul_Trades",
       "focus": "Price Action + ICT",
       "topics": ["ict", "sniper entry", "liquidity", "order block"]
+    },
+    "TraderDiegoX": {
+      "username": "TraderDiegoX",
+      "focus": "MMXM + Timeframe Alignment + ICT",
+      "topics": ["mmxm", "timeframe", "m1", "m5", "ict", "order block", "market structure"]
     }
   },
   "settings": {
