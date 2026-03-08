@@ -394,6 +394,172 @@ class StructureEngine {
 
   // ============================================
   // COMPREHENSIVE STRUCTURE ANALYSIS
+
+  // ============================================
+  // ORDER BLOCKS
+  // ============================================
+
+  /**
+   * Detect Order Blocks (OB)
+   * Bullish OB: candle before strong bullish impulse
+   * Bearish OB: candle before strong bearish impulse
+   */
+  detectOrderBlocks(timeframe = '1h', lookback = 50) {
+    const candles = this.data.getRecentCandles(timeframe, lookback);
+    const orderBlocks = [];
+    
+    for (let i = 5; i < candles.length - 10; i++) {
+      const impulse = candles.slice(i, i + 5);
+      const impulseMove = impulse[impulse.length - 1].close - impulse[0].open;
+      const impulsePercent = (impulseMove / impulse[0].open) * 100;
+      
+      if (impulsePercent > 2) {
+        const obCandle = candles[i - 1];
+        const bodySize = Math.abs(obCandle.close - obCandle.open);
+        const candleRange = obCandle.high - obCandle.low;
+        
+        orderBlocks.push({
+          type: 'BULLISH_OB',
+          zone: { low: obCandle.low, high: obCandle.high },
+          date: obCandle.time,
+          impulseStrength: impulsePercent,
+          quality: bodySize > candleRange * 0.7 ? 'HIGH' : 'MEDIUM',
+          mitigation: 'PENDING'
+        });
+      }
+      
+      if (impulsePercent < -2) {
+        const obCandle = candles[i - 1];
+        const bodySize = Math.abs(obCandle.close - obCandle.open);
+        const candleRange = obCandle.high - obCandle.low;
+        
+        orderBlocks.push({
+          type: 'BEARISH_OB',
+          zone: { low: obCandle.low, high: obCandle.high },
+          date: obCandle.time,
+          impulseStrength: Math.abs(impulsePercent),
+          quality: bodySize > candleRange * 0.7 ? 'HIGH' : 'MEDIUM',
+          mitigation: 'PENDING'
+        });
+      }
+    }
+    
+    const currentPrice = this.data.getCurrentPrice();
+    for (const ob of orderBlocks) {
+      if (ob.type === 'BULLISH_OB') {
+        if (currentPrice < ob.zone.low) ob.mitigation = 'MITIGATED';
+      } else {
+        if (currentPrice > ob.zone.high) ob.mitigation = 'MITIGATED';
+      }
+    }
+    
+    return orderBlocks.filter(ob => ob.mitigation === 'PENDING').slice(0, 5);
+  }
+
+  // ============================================
+  // BREAKER BLOCKS
+  // ============================================
+
+  /**
+   * Detect Breaker Blocks
+   * Price breaks OB then retests it - strong confirmation
+   */
+  detectBreakerBlocks(timeframe = '1h', lookback = 100) {
+    const candles = this.data.getRecentCandles(timeframe, lookback);
+    const breakerBlocks = [];
+    
+    const orderBlocks = [];
+    for (let i = 5; i < candles.length - 15; i++) {
+      const impulse = candles.slice(i, i + 5);
+      const impulseMove = impulse[impulse.length - 1].close - impulse[0].open;
+      const impulsePercent = (impulseMove / impulse[0].open) * 100;
+      
+      if (impulsePercent > 2 || impulsePercent < -2) {
+        orderBlocks.push({
+          index: i,
+          type: impulsePercent > 2 ? 'BULLISH_OB' : 'BEARISH_OB',
+          low: candles[i - 1].low,
+          high: candles[i - 1].high
+        });
+      }
+    }
+    
+    for (const ob of orderBlocks) {
+      const breakIndex = ob.index + 5;
+      if (breakIndex < candles.length - 5) {
+        const breakCandle = candles[breakIndex];
+        let broken = false;
+        let brokenUp = false;
+        
+        if (ob.type === 'BULLISH_OB' && breakCandle.close > ob.high) {
+          broken = true; brokenUp = true;
+        } else if (ob.type === 'BEARISH_OB' && breakCandle.close < ob.low) {
+          broken = true; brokenUp = false;
+        }
+        
+        if (broken) {
+          for (let j = breakIndex + 1; j < Math.min(breakIndex + 20, candles.length - 1); j++) {
+            const retestCandle = candles[j];
+            let retested = false;
+            
+            if (brokenUp && retestCandle.low <= ob.high && retestCandle.close > ob.high) retested = true;
+            else if (!brokenUp && retestCandle.high >= ob.low && retestCandle.close < ob.low) retested = true;
+            
+            if (retested) {
+              breakerBlocks.push({
+                type: brokenUp ? 'BULLISH_BREAKER' : 'BEARISH_BREAKER',
+                originalOB: { low: ob.low, high: ob.high },
+                breakDate: breakCandle.time,
+                retestDate: retestCandle.time,
+                strength: 'HIGH',
+                confirmation: 'INSTITUTIONAL_ACTIVITY'
+              });
+              break;
+            }
+          }
+        }
+      }
+    }
+    return breakerBlocks.slice(0, 5);
+  }
+
+  // ============================================
+  // EQUILIBRIUM LEVELS
+  // ============================================
+
+  /**
+   * Detect Equilibrium Levels
+   * Midpoints of ranges where buyers/sellers balance
+   */
+  detectEquilibriumLevels(timeframe = '1h', lookback = 50) {
+    const candles = this.data.getRecentCandles(timeframe, lookback);
+    const equilibriumLevels = [];
+    
+    for (let i = 20; i < candles.length - 10; i += 10) {
+      const range = candles.slice(i - 10, i);
+      const rangeHigh = Math.max(...range.map(c => c.high));
+      const rangeLow = Math.min(...range.map(c => c.low));
+      
+      const equilibrium = (rangeHigh + rangeLow) / 2;
+      
+      let touches = 0;
+      for (let j = i; j < candles.length; j++) {
+        if (Math.abs(candles[j].close - equilibrium) / equilibrium < 0.002) touches++;
+      }
+      
+      if (touches >= 2) {
+        equilibriumLevels.push({
+          level: equilibrium,
+          rangeHigh, rangeLow,
+          touches,
+          strength: touches >= 4 ? 'STRONG' : touches >= 3 ? 'MEDIUM' : 'WEAK',
+          timeframe
+        });
+      }
+    }
+    return equilibriumLevels.sort((a, b) => b.touches - a.touches).slice(0, 5);
+  }
+
   // ============================================
 
   /**
@@ -409,6 +575,11 @@ class StructureEngine {
     const bos = this.detectBoS(timeframe);
     const mss = this.detectMSS(timeframe);
     
+    // NEW: Order Blocks, Breaker Blocks, Equilibrium
+    const orderBlocks = this.detectOrderBlocks(timeframe, 50);
+    const breakerBlocks = this.detectBreakerBlocks(timeframe, 100);
+    const equilibrium = this.detectEquilibriumLevels(timeframe, 50);
+    
     return {
       timestamp: new Date().toISOString(),
       currentPrice,
@@ -416,15 +587,22 @@ class StructureEngine {
       swings,
       pivots,
       displacements,
-      liquidityPools: pools.slice(0, 10), // Top 10 closest
+      liquidityPools: pools.slice(0, 10),
       sweeps,
       structure: { bos, mss },
+      // NEW: Added features
+      orderBlocks,
+      breakerBlocks,
+      equilibrium,
       summary: {
         totalLiquidityPools: pools.length,
         nearestSSL: pools.find(p => p.type === 'SSL') || null,
         nearestBSL: pools.find(p => p.type === 'BSL') || null,
         lastDisplacement: displacements[0] || null,
-        recentSweeps: sweeps.length
+        recentSweeps: sweeps.length,
+        totalOrderBlocks: orderBlocks.length,
+        totalBreakerBlocks: breakerBlocks.length,
+        totalEquilibrium: equilibrium.length
       }
     };
   }
