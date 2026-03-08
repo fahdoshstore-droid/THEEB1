@@ -1,43 +1,40 @@
 # Weekly Analysis - NQ (Nasdaq)
 
-## ملخص Weekly Outlook
-
-**المصدر:** @Liq_Sniper - TradingView Ideas
-
----
-
-### التحليل:
-
-```
-Weekly NDX (Nasdaq 100)
-━━━━━━━━━━━━━━━━━━━━━
-
-📈 الترند: Bullish (من Feb 23, 2026)
-
-📍 الحالة الحالية:
-   - Price ي bounce داخل Zone
-   - Momentum: Bearish (signaling squeeze)
-
-🎯 المستويات:
-   - Trend Bullish
-   - التوقع: تصحيح ثم صعود
-```
-
----
-
-### Top-Down Analysis:
+## Top-Down Analysis (MMXM)
 
 ```
 ┌─────────────────────────────────────┐
 │         WEEKLY (HTF)               │
-│  Bullish Trend (Feb 23)           │
+│  الترند الرئيسي                      │
 ├─────────────────────────────────────┤
 │         DAILY (MTF)                │
-│  Bouncing in Zone                  │
+│  Zones + Structure                  │
 ├─────────────────────────────────────┤
-│         4H/1H (LTF)               │
-│  Bearish Momentum + Squeeze        │
+│         4H / 1H (ITF)              │
+│  Setup + Pattern                   │
+├─────────────────────────────────────┤
+│         M15 / M5 / M1 (LTF)        │
+│  Entry نقطة الدخول ✓                 │
 └─────────────────────────────────────┘
+```
+
+## MMXM Timeframe Alignment
+
+| الفريم | الاختصار | الوظيفة |
+|--------|---------|---------|
+| Weekly | HTF | الترند |
+| Daily | MTF | Zones |
+| 4H/1H | ITF | Setup |
+| M15/M5/M1 | LTF | Entry |
+
+### MMXM Rule
+
+```
+Setup على فريم كبير + Entry على فريم صغير
+
+مثال:
+- Setup: H1
+- Entry: M5 أو M1
 ```
 
 ---
@@ -48,91 +45,59 @@ Weekly NDX (Nasdaq 100)
 
 | Account | المنصة | التخصص |
 |---------|--------|--------|
-| @Liq_Sniper | Twitter/X | Liquidity + Breaker Blocks + Weekly Outlook |
+| @Liq_Sniper | Twitter/X | Liquidity + Breaker + Weekly |
+| @TraderDiegoX | Twitter/X | **MMXM + Timeframe** |
 | @ICT_Strategy | Twitter/X | ICT Concepts |
-| @TheInnerCircle | Twitter/X | Michael Hudson - ICT |
+| @TheInnerCircle | Twitter/X | Michael Hudson |
 | @TraderSeymour | Twitter/X | SMC + Price Action |
-| @Paul_Trades | Twitter/X | Price Action + ICT |
-
-### المواقع:
-
-| الموقع | الاستخدام |
-|--------|---------|
-| TradingView | شارتات + أفكار |
-| xs.com | مقالات تعليمية |
-| fxopen.com | تحليلات |
-| LuxAlgo | مؤشرات |
-| **Tradingster** | **COT Data** |
-| Barchart | COT Reports |
 
 ---
 
-## COT Analysis (Commitments of Traders)
+## Top-Down Analysis Checklist
 
-### وش هو COT؟
+### 1. Weekly (HTF)
+- [ ] الترند (Bullish/Bearish)
+- [ ] مناطق الدعم/مقاومة
+- [ ] السوidal pools
 
-```
-COT Report = تقرير التزامات المتداولين
-يوضح مراكز المؤسسات والكبار
-```
+### 2. Daily (MTF)
+- [ ] الهيكل
+- [ ] Order Blocks
+- [ ] FVG
 
-### الفئات:
+### 3. 4H/1H (ITF)
+- [ ] الـ Setup
+- [ ] الترند الفرعي
+- [ ] مناطق الدخول
 
-| الفئة | الوصف | الاستراتيجية |
-|-------|------|------------|
-| **Commercials** | المؤسسات + producers | trend followers |
-| **Non-Commercials** | Hedge Funds + Big Money | smart money |
-| **Retail** | المتداولين الصغار | contrary indicator |
-
-### قاعدة COT:
-
-```
- Commercials =buy → trend continues
- Commercials =sell → trend reverses
-
- Retail =buy → top (sell)
- Retail =sell → bottom (buy)
-```
-
-### استخدام COT:
-
-1. شوف Commercials يجمعون في نفس الاتجاه
-2. شوف Retail في الطرف الآخر
-3. ادخل مع Commercials
+### 4. M15/M5/M1 (LTF)
+- [ ] نقطة الدخول
+- [ ] MSS/CHOCH
+- [ ] Stop Loss
 
 ---
 
 ## Weekly Analysis Template
 
-### Steps:
-
-1. **Weekly (HTF):** تحديد الترند
-2. **Daily (MTF):** تحديد Zone
-3. **4H/1H (LTF):** تحديد الدخول
-4. **COT:** تأكيد الاتجاه
-
-### الأسئلة:
+### Questions:
 
 | السؤال | الجواب |
 |-------|--------|
 | الترند؟ | Bullish/Bearish |
 | Zone؟ | Supply/Demand |
-| Momentum؟ | Bullish/Bearish |
-| Squeeze؟ | نعم/لا |
-| **COT؟** | **Commercials position** |
-| الدخول؟ | عند الـ Breaker/OB |
+| MMXM Setup؟ | على أي فريم؟ |
+| Entry؟ | على أي فريم؟ |
+| COT؟ | Commercials position |
+| الدخول؟ | عند OB/FVG |
 
 ---
 
 ## مصادر مباشرة
 
-### للأسبوع الحالي:
-
 - [TradingView NDX Ideas](https://tradingview.com/symbols/NASDAQ-NDX/ideas/)
 - [xs.com - Order Block Guide](https://www.xs.com/en/blog/order-block-guide/)
 - [fxopen - Breaker Blocks](https://fxopen.com/blog/en/order-blocks-and-breaker-blocks-of-the-smart-money-concept/)
 - [Tradingster - COT Data](https://www.tradingster.com/)
-- [Barchart - COT Reports](https://www.barchart.com/futures/commitments-of-traders)
 
 ---
 
